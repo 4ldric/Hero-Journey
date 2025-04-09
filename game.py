@@ -16,7 +16,16 @@ class Personagem:
     def get_nivel(self):  
         return self.__nivel
     def exibir_detalhes(self):
-        return f'Nome: {self.get_nome()}\nVida: {self.get_vida()}\nNivel: {self.get_nivel()}'
+        return f'\nNome: {self.get_nome()}\nVida: {self.get_vida()}\nNivel: {self.get_nivel()}'
+    
+    def atacar(self, alvo):
+        dano = self.__nivel * 2
+        alvo.receber_ataque(dano)
+        print(f'{self.get_nome()} atacou {alvo.get_nome()} e causou {dano} de dano')
+    def receber_ataque(self,dano):
+        self.__vida -= dano
+        if self.__vida < 0:
+            self.__vida == 0
 
 class Heroi(Personagem):
     def __init__(self, nome, vida, nivel, habilidade):
@@ -34,10 +43,38 @@ class Inimigo(Personagem):
     def get_tipo(self):
         return self.__tipo
     def exibir_detalhes(self):
-        return f'{super().exibir_detalhes()}\nTipo: {self.get_tipo()}'
+        return f'{super().exibir_detalhes()}\nTipo: {self.get_tipo()}\n'
 
 
-heroi = Heroi("Mauro", 100, 5, "Super soco")
-print(heroi.exibir_detalhes())
-inimigo = Inimigo("morcego", 50, 3, "Fogo")  
-print(inimigo.exibir_detalhes())
+class jogo:
+    """Classe orquestradora do jogo"""
+    def __init__(self):
+        self.heroi = Heroi("Mauro", 100, 5, "Super soco")
+        self.inimigo = Inimigo("morcego", 50, 3, "Fogo") 
+
+    def iniciar_batalha(self):
+        """Gestao de batalha"""
+        print("Iniciando batalha!")
+        while self.heroi.get_vida() > 0 and self.inimigo.get_vida() > 0:
+            print("Detalhes dos personagens")
+            print(self.heroi.exibir_detalhes())
+            print(self.inimigo.exibir_detalhes())
+
+            input("Pressione Enter para atacar...")
+            escolha = input("Escolha ([1]. Ataque normal, [2]. Ataque Especial): ")
+
+            if escolha == "1":
+                self.heroi.atacar(self.inimigo)
+            else:
+                print("comando invalido")
+        if self.heroi.get_vida() > 0:
+            print(f"\nParabens, voce derrotou [{self.inimigo.get_nome()}]")
+        else:
+            print("\nVoce foi derrotado")
+
+
+
+
+# Criando as instancias para inicio de combate
+game = jogo()
+game.iniciar_batalha()
